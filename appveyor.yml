@@ -1,0 +1,37 @@
+version: 0.1 ({build})
+
+clone_folder: C:\cppcore 
+
+skip_branch_with_pr: true
+
+image:
+  - Visual Studio 2017
+  - Visual Studio 2019
+
+platform:
+  - x64
+
+configuration:
+  - Release
+
+matrix:
+  fast_finish: true  # Stop remaining jobs after a job failure
+
+init:
+  - echo %APPVEYOR_BUILD_WORKER_IMAGE%
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" ( set generator="Visual Studio 15 2017")
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" ( set generator="Visual Studio 16 2019")
+
+before_build:
+  - cmd: mkdir cmake-build
+  - cmd: cd cmake-build
+  - cmd: cmake --version
+  - cmd: cmake .. -G %generator% -A %PLATFORM%
+
+build:
+  project: C:\cppcore\cmake-build\cppcore.sln
+  verbosity: minimal
+  parallel: true
+
+after_build:
+  - cmd: ECHO after_build

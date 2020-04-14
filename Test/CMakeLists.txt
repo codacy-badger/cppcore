@@ -1,0 +1,3 @@
+set_test_build_directory(OUTPUT_DIRECTORY)
+
+add_subdirectory(BaseProjectTest)

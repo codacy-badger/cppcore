@@ -1,8 +1,4 @@
-#ignore vscode 
-.vscode
-.vs
-
-#ignore cmake
+# ignore cmake
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
@@ -14,4 +10,31 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
-*-prefix/
+DartConfiguration.tcl
+
+# ignore gtest generated file
+Lib/googletest/*
+Lib/googletest-build/*
+
+# ignore build
+cmake-build
+!Build/travis_build_codecov.sh
+Output
+out
+
+# ignore coverage
+coverage
+
+# ignore ide
+.vs
+.vscode
+coverage.info
+
+# ignore visual studio 
+# The packages folder can be ignored because of Package Restore
+Test/**/x64/**
+**/[Pp]ackages/*
+
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+*.user

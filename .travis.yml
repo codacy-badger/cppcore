@@ -1,0 +1,26 @@
+language: cpp
+os: linux
+compiler: g++
+
+cache: # see https://docs.travis-ci.com/user/caching/
+- directories:
+  - $HOME/.cache
+
+addons:
+  apt:
+    packages: lcov
+
+install:
+# (fake) install dependencies (usually involves wget, configure, make, ...)
+# install into cache folder (build binaries+headers only, no sources and do NOT build there)
+- mkdir -p $HOME/.cache
+- touch $HOME/.cache/mydependency.so
+
+script: sh Build/travis_build_codecov.sh
+
+after_success:
+# Create lcov report
+- make coverage
+# Uploading to CodeCov
+# '-f' specifies file(s) to use and disables manual coverage gathering and file search which has already been done above
+- bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"

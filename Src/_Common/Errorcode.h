@@ -1,0 +1,34 @@
+#pragma once
+
+using ECODE = int;
+
+constexpr ECODE	EC_SUCCESS			   = 0    ;
+constexpr ECODE EC_INVALID_FILE		   = 20000;
+constexpr ECODE EC_ENDOFFILE		   = 20001;
+constexpr ECODE EC_NO_FILE			   = 20002;
+constexpr ECODE EC_ALREADY_CREATED	   = 20003;
+constexpr ECODE EC_ALREADY_EXISTS	   = 20004;
+constexpr ECODE EC_AUTHORIZATION_ERROR = 20005;
+constexpr ECODE EC_NOT_ENOUGH_MEMORY   = 20006;
+constexpr ECODE EC_NO_DATA			   = 20007;
+constexpr ECODE EC_WRITE_FAILURE	   = 20008;
+constexpr ECODE EC_READ_FAILURE		   = 20009;
+constexpr ECODE EC_INVALID_DATA		   = 20010;
+constexpr ECODE EC_INVALID_BOM_TYPE	   = 20011;
+constexpr ECODE EC_INVALID_FUNCTION	   = 20012;
+constexpr ECODE EC_INVALID_BLOCK	   = 20013;
+constexpr ECODE EC_INVALID_HANDLE	   = 20014;
+constexpr ECODE EC_INVALID_ARGUMENT	   = 20015;
+constexpr ECODE EC_NOT_IMPLEMENTED	   = 20016;
+constexpr ECODE EC_NOT_SUPPORTED	   = 20017;
+constexpr ECODE EC_INTERNAL_ERROR	   = 20018;
+constexpr ECODE EC_TIMEOUT			   = 20019;
+constexpr ECODE EC_ABANDONED		   = 20020;
+constexpr ECODE EC_CANCELED			   = 20021;
+constexpr ECODE EC_CONNECTION_LIMIT	   = 20022;
+constexpr ECODE EC_DISCONNECTED		   = 20023;
+constexpr ECODE EC_INVALID_IP_STRING   = 20024;
+constexpr ECODE EC_DATA_FULL		   = 20025;
+constexpr ECODE EC_MORE_DATA		   = 20026;
+constexpr ECODE EC_NOT_CONNECTED	   = 20027;
+constexpr ECODE EC_OPEN_FAILURE		   = 20028;
