@@ -1,3 +1,3 @@
 set_build_directory(OUTPUT_DIRECTORY)
 
-add_subdirectory(BaseProject)
+add_subdirectory(000_String)

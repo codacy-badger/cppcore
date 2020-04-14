@@ -1,4 +1,4 @@
-set(TARGET_NAME BaseProject)
+set(TARGET_NAME 000_String)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
@@ -8,4 +8,4 @@ foreach(SOURCE IN LISTS SOURCES)
 endforeach(SOURCE)
 message(STATUS "OUTPUT- " ${OUTPUT_DIRECTORY})
 
-add_executable(${TARGET_NAME} ${SOURCES})
+add_library(${TARGET_NAME} STATIC ${SOURCES})

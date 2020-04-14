@@ -1,8 +1,6 @@
-set(TARGET_NAME BaseProjectTest)
+set(TARGET_NAME 000_StringTest)
 
 file(GLOB_RECURSE SOURCES *.cpp)
-include_to_list(SOURCES ${PROJECT_SOURCE_DIR}/Src/BaseProject/*.cpp)
-exclude_from_list(SOURCES ${PROJECT_SOURCE_DIR}/Src/BaseProject/main.cpp)
 
 message(STATUS "TARGET- " ${TARGET_NAME})
 foreach(SOURCE IN LISTS SOURCES)
@@ -32,4 +30,4 @@ target_compile_definitions(${TARGET_NAME}
     PRIVATE
 )
 
-target_link_libraries(${TARGET_NAME} ${DEFAULT_LINKER_OPTIONS} gtest_main gtest)
+target_link_libraries(${TARGET_NAME} ${DEFAULT_LINKER_OPTIONS} gtest_main gtest 000_String)

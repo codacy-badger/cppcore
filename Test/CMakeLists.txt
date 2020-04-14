@@ -1,3 +1,3 @@
 set_test_build_directory(OUTPUT_DIRECTORY)
 
-add_subdirectory(BaseProjectTest)
+add_subdirectory(000_StringTest)

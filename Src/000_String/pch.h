@@ -1,6 +1,7 @@
-#pragma once
+#pragma once 
 
 #include <stdio.h>
+#include <vector>
 
 #include "../_Common/Type.h"
 #include "../_Common/Define.h"
