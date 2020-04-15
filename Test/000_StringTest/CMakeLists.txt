@@ -15,13 +15,6 @@ set_target_properties(${TARGET_NAME}
     PROPERTIES
     ${DEFAULT_PROJECT_OPTIONS}
 )
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(DEFAULT_COMPILE_OPTIONS ${DEFAULT_COMPILE_OPTIONS}
-        # /wd4996       # -> disable warning: non-Standard std::tr1 namespace and TR1-only machinery (because of gtest)		
-        -Wno-unused-variable
-        )
-endif()
 target_compile_options(${TARGET_NAME}
     PRIVATE
     ${DEFAULT_COMPILE_OPTIONS}
@@ -29,5 +22,6 @@ target_compile_options(${TARGET_NAME}
 target_compile_definitions(${TARGET_NAME}
     PRIVATE
 )
-
-target_link_libraries(${TARGET_NAME} ${DEFAULT_LINKER_OPTIONS} gtest_main gtest 000_String)
+target_link_libraries(${TARGET_NAME} 
+    ${DEFAULT_LINKER_OPTIONS} gtest_main gtest 000_String
+)

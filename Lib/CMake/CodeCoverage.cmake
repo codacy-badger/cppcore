@@ -111,7 +111,7 @@ FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
 		COMMAND ${_testrunner} ${ARGV3}
 
 		# Capturing lcov counters and generating report
-		COMMAND ${LCOV_PATH} -d ${PROJECT_SOURCE_DIR}/Src -d ${PROJECT_SOURCE_DIR}/Test --no-external --capture --output-file ${_outputname}.info
+		COMMAND ${LCOV_PATH} -d Src --capture --output-file ${_outputname}.info
 		COMMAND ${LCOV_PATH} --remove ${_outputname}.info '/usr/*' --output-file ${_outputname}.info
 		COMMAND ${LCOV_PATH} --list ${_outputname}.info
 		COMMAND ${GENHTML_PATH} -o ${_outputname} ${_outputname}.info

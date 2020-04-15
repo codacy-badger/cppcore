@@ -9,3 +9,15 @@ endforeach(SOURCE)
 message(STATUS "OUTPUT- " ${OUTPUT_DIRECTORY})
 
 add_library(${TARGET_NAME} STATIC ${SOURCES})
+
+set_target_properties(${TARGET_NAME}
+    PROPERTIES
+    ${DEFAULT_PROJECT_OPTIONS}
+)
+target_compile_options(${TARGET_NAME}
+    PRIVATE
+    ${DEFAULT_COMPILE_OPTIONS}
+)
+target_compile_definitions(${TARGET_NAME}
+    PRIVATE
+)
