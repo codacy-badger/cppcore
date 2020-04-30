@@ -3,6 +3,8 @@
 
 using namespace core;
 
+constexpr size_t MAX_BUFFER_SIZE = 30;
+
 TEST(CStrLegacyTest, IsWhiteSpace_return_true_on_whitespace_input)
 {
 	EXPECT_TRUE(IsWhiteSpace(TEXT(' ')));
@@ -35,39 +37,35 @@ TEST(CStrLegacyTest, SafeStrLen_return_value_on_edged_max_cch)
 
 TEST(CStrLegacyTest, SafeStrCpy_strcpy_within_max_cch)
 {
-	constexpr size_t MAX_BUFFER_SIZE = 20;
-	LPTSTR tcsDestBuffer = new TCHAR[MAX_BUFFER_SIZE];
-	LPCTSTR tcsSrcStr = TEXT("string to copy");
+	LPTSTR pszDestBuffer = new TCHAR[MAX_BUFFER_SIZE];
+	LPCTSTR pszSrcStr = TEXT("string to copy");
 
-	EXPECT_STRNE(tcsDestBuffer, tcsSrcStr);
-	EXPECT_EQ(tcsDestBuffer, SafeStrCpy(tcsDestBuffer, MAX_BUFFER_SIZE, tcsSrcStr));
-	EXPECT_STREQ(tcsDestBuffer, tcsSrcStr);
+	EXPECT_STRNE(pszDestBuffer, pszSrcStr);
+	EXPECT_EQ(pszDestBuffer, SafeStrCpy(pszDestBuffer, MAX_BUFFER_SIZE, pszSrcStr));
+	EXPECT_STREQ(pszDestBuffer, pszSrcStr);
 }
 
 TEST(CStrLegacyTest, SafeStrCat_strcat_within_max_cch)
 {
-	constexpr size_t MAX_BUFFER_SIZE = 30;
-	LPTSTR tcsDestBuffer = new TCHAR[MAX_BUFFER_SIZE];
+	LPTSTR pszDestBuffer = new TCHAR[MAX_BUFFER_SIZE];
 	
-	SafeStrCpy(tcsDestBuffer, MAX_BUFFER_SIZE, TEXT("string"));
-	SafeStrCat(tcsDestBuffer, MAX_BUFFER_SIZE, TEXT("cat"));
-	EXPECT_STREQ(tcsDestBuffer, TEXT("stringcat"));
+	SafeStrCpy(pszDestBuffer, MAX_BUFFER_SIZE, TEXT("string"));
+	SafeStrCat(pszDestBuffer, MAX_BUFFER_SIZE, TEXT("cat"));
+	EXPECT_STREQ(pszDestBuffer, TEXT("stringcat"));
 }
 
 TEST(CStrLegacyTest, SafeStrStr_strstr_within_max_cch)
 {
-	constexpr size_t MAX_BUFFER_SIZE = 30;
-	LPCTSTR tcsDestStr = TEXT("123cat789cat");
-	LPCTSTR tcsKeyStr = TEXT("cat");
-	LPCTSTR tcsStrExpected = TEXT("cat789cat");
+	LPCTSTR pszDest		 = TEXT("123cat789cat");
+	LPCTSTR pszKeyToFind = TEXT("cat");
+	LPCTSTR pszExpected  = TEXT("cat789cat");
 
-	LPCTSTR tcsStrFound = SafeStrStr(tcsDestStr, MAX_BUFFER_SIZE, tcsKeyStr);
-	EXPECT_STREQ(tcsStrFound, tcsStrExpected);
+	LPCTSTR tcsStrFound = SafeStrStr(pszDest, MAX_BUFFER_SIZE, pszKeyToFind);
+	EXPECT_STREQ(tcsStrFound, pszExpected);
 }
 
 TEST(CStrLegacyTest, SafeSPrintf_sprintf_within_max_cch)
 {
-	constexpr size_t MAX_BUFFER_SIZE = 30;
 	LPTSTR tcsDestBuffer = new TCHAR[MAX_BUFFER_SIZE];
 	
 	SafeSPrintf(tcsDestBuffer, MAX_BUFFER_SIZE, TEXT("%s %d"), TEXT("string"), 10);
@@ -76,7 +74,6 @@ TEST(CStrLegacyTest, SafeSPrintf_sprintf_within_max_cch)
 
 TEST(CStrLegacyTest, SafeFindStr_findstr_within_max_cch)
 {
-	constexpr size_t MAX_BUFFER_SIZE = 30;
 	LPCTSTR tcsDestStr = TEXT("123 cat apple");
 
 	EXPECT_EQ(0, SafeFindStr(tcsDestStr, MAX_BUFFER_SIZE, TEXT("123")));
@@ -86,8 +83,6 @@ TEST(CStrLegacyTest, SafeFindStr_findstr_within_max_cch)
 
 TEST(CStrLegacyTest, SafeStrCmp_strcmp_within_max_cch)
 {
-	constexpr size_t MAX_BUFFER_SIZE = 30;
-
 	EXPECT_EQ(0, SafeStrCmp(TEXT(""), TEXT(""), MAX_BUFFER_SIZE));
 	EXPECT_EQ(0, SafeStrCmp(TEXT("abcdef"), TEXT("abcdef"), MAX_BUFFER_SIZE));
 	EXPECT_EQ(-1, SafeStrCmp(TEXT("abcdef"), TEXT("abcdex"), MAX_BUFFER_SIZE));

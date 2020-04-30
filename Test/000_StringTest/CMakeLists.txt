@@ -7,7 +7,7 @@ foreach(SOURCE IN LISTS SOURCES)
 	message(STATUS "SOURCE- " ${SOURCE})
 endforeach(SOURCE)
 
-add_executable(${TARGET_NAME} ${SOURCES})
+add_executable(${TARGET_NAME} ${SOURCES} "CStrSafeTest.cpp")
 add_test(NAME ${TARGET_NAME} COMMAND ${TARGET_NAME} WORKING_DIRECTORY ${OUTPUT_DIRECTORY})
 
 # Project options
