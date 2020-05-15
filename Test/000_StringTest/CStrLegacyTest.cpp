@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "../../Src/000_String/CStrLegacy.h"
 
-using namespace core;
-
 constexpr size_t MAX_BUFFER_SIZE = 30;
 
 TEST(CStrLegacyTest, IsWhiteSpace_return_true_on_whitespace_input)

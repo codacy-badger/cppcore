@@ -1,9 +1,11 @@
 #include "CStrLegacy.h"
 #include <string.h>
+#include <stack>
 #include <algorithm>
 
 namespace core
 {
+	////////////////////////////////////////////////////////////////////////////////////////
 	bool IsWhiteSpace(TCHAR cChar)
 	{
 		if (TEXT(' ') == cChar)
@@ -19,6 +21,7 @@ namespace core
 		return false;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	int SafeStrLen(LPCTSTR tcsContext, size_t tMaxCch)
 	{
 		size_t i = 0;
@@ -30,6 +33,7 @@ namespace core
 		return static_cast<int>(i);
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	TCHAR* SafeStrCpy(LPTSTR tcsDest, size_t tDestCch, LPCTSTR tcsSrc)
 	{
 		if (0 == tDestCch)
@@ -44,6 +48,7 @@ namespace core
 		return tcsDest;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	TCHAR* SafeStrCat(LPTSTR tcsDest, size_t tDestCch, LPCTSTR tcsSrc)
 	{
 		if (0 == tDestCch)
@@ -53,6 +58,7 @@ namespace core
 		return SafeStrCpy(tcsDest + tIdxToCat, tDestCch - tIdxToCat, tcsSrc);
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	static inline bool StrExactMatchWorker(LPCTSTR tcsDest, LPCTSTR tcsSrc, size_t tLen)
 	{
 		for (size_t i = 0; i < tLen; i++)
@@ -63,6 +69,7 @@ namespace core
 		return true;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	LPCTSTR SafeStrStr(LPCTSTR tcsDest, size_t tDestCch, LPCTSTR tcsSubStr)
 	{
 		const size_t tSubStrCch = SafeStrLen(tcsSubStr, tDestCch);
@@ -78,6 +85,7 @@ namespace core
 		return NULL;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	int SafeSPrintf(LPTSTR tcsDest, size_t tDestCch, LPCTSTR tcsFormat, ...)
 	{
 		va_list list;
@@ -93,6 +101,7 @@ namespace core
 		return nRet;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	int SafeSVPrintf(LPTSTR tcsDest, size_t tDestCch, LPCTSTR tcsFormat, va_list vaList)
 	{
 	#if defined (_MSC_VER) & defined(UNICODE)
@@ -121,6 +130,7 @@ namespace core
 		return nRet;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	size_t SafeFindStr(LPCTSTR tcsDest, size_t tCchDest, LPCTSTR tcsKey)
 	{
 		const size_t tCchKey = SafeStrLen(tcsKey, tCchDest);
@@ -136,6 +146,7 @@ namespace core
 		return -1;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	int SafeStrCmp(LPCTSTR tcsSrc, LPCTSTR tcsTarget, size_t tMaxCch)
 	{
 		size_t i;
@@ -157,5 +168,126 @@ namespace core
 		if (tcsSrc[i] > tcsTarget[i])
 			return 1;
 		return 0;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	static inline void TokenizeWildCardPattern(std::tstring strWildCard, std::vector<std::tstring>& vecTokens)
+	{
+		static const std::tstring s_WildCards = TEXT("?*");
+		size_t tBeginIndex = 0;
+		size_t i;
+		for (i = 0; i < strWildCard.size(); i++)
+		{
+			const TCHAR cCurChar = strWildCard.at(i);
+			if (std::tstring::npos == s_WildCards.find(cCurChar))
+				continue;
+
+			if (tBeginIndex != i)
+				vecTokens.push_back(strWildCard.substr(tBeginIndex, i - tBeginIndex));
+
+			TCHAR szToken[2] = { cCurChar, 0 };
+			vecTokens.push_back(szToken);
+			tBeginIndex = i + 1;
+			continue;
+		}
+
+		if (tBeginIndex != i)
+			vecTokens.push_back(strWildCard.substr(tBeginIndex));
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	struct ST_WILDCARDSEARCH
+	{
+		size_t tWildCardPos;
+		size_t tContextPos;
+
+		ST_WILDCARDSEARCH(void) : tWildCardPos(0), tContextPos(0) {}
+		ST_WILDCARDSEARCH(size_t w, size_t c) : tWildCardPos(w), tContextPos(c) {}
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	bool SafeStrCmpWithWildcard(LPCTSTR pszDest, size_t tDestCch, LPCTSTR pszPattern)
+	{
+		std::vector<std::tstring> vecPatternTokens;
+		TokenizeWildCardPattern(pszPattern, vecPatternTokens);
+
+		std::stack<ST_WILDCARDSEARCH> stackSearchingScenario;
+		stackSearchingScenario.push(ST_WILDCARDSEARCH(0, 0));
+		while (!stackSearchingScenario.empty())
+		{
+			ST_WILDCARDSEARCH stCur = stackSearchingScenario.top();
+			stackSearchingScenario.pop();
+
+			bool bAsteriskMark = false;
+			size_t tQuestionMarkCount = 0;
+
+			for (; stCur.tWildCardPos < vecPatternTokens.size(); stCur.tWildCardPos++)
+			{
+				const std::tstring& strPatternToken = vecPatternTokens[stCur.tWildCardPos];
+				if (TEXT("*") == strPatternToken)
+				{
+					bAsteriskMark = true;
+					continue;
+				}
+
+				if (TEXT("?") == strPatternToken)
+				{
+					if (bAsteriskMark)
+					{
+						tQuestionMarkCount++;
+						continue;
+					}
+
+					// failure, one charactor wildcard is exceeding context length
+					if (stCur.tContextPos + 1 > tDestCch)
+						break;
+					stCur.tContextPos++;
+					continue;
+				}
+
+				if (bAsteriskMark)
+				{
+					// failure, question mark was exceeded remaining context length
+					if (stCur.tContextPos + tQuestionMarkCount > tDestCch)
+						break;
+
+					stCur.tContextPos += tQuestionMarkCount;
+					tQuestionMarkCount = 0;
+
+					do
+					{
+						int nIndex = SafeFindStr(pszDest + stCur.tContextPos, tDestCch - stCur.tContextPos, strPatternToken.c_str());
+						if (nIndex < 0)
+							break;
+
+						stCur.tContextPos += nIndex;
+						stackSearchingScenario.push(stCur);
+						stCur.tContextPos += strPatternToken.length();
+					} while (stCur.tContextPos < tDestCch);
+					break;
+				}
+
+				// failure, token text is exceeding context length
+				if (stCur.tContextPos + strPatternToken.length() > tDestCch)
+					break;
+
+				// failure, token text is matched to context
+				if (SafeStrCmp(pszDest + stCur.tContextPos, strPatternToken.c_str(), strPatternToken.length()))
+					break;
+
+				stCur.tContextPos += strPatternToken.length();
+			}
+
+			if (stCur.tWildCardPos == vecPatternTokens.size())
+			{
+				if (stCur.tContextPos == tDestCch)
+					return true;
+
+				if (bAsteriskMark && (stCur.tContextPos + tQuestionMarkCount <= tDestCch))
+					return true;
+			}
+		}
+
+		return false;
 	}
 }

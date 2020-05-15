@@ -23,4 +23,6 @@ namespace core
 	size_t SafeFindStr(const wchar_t* pszDest, size_t tCchDest, const wchar_t* pszKey);
 	int SafeStrCmp(const char* pszSrc, const char* pszTarget, size_t tMaxCch);
 	int SafeStrCmp(const wchar_t* pszSrc, const wchar_t* pszTarget, size_t tMaxCch);
+	bool SafeStrCmpWithWildcard(const char* pszDest, size_t tDestCch, const char* pszPattern);
+	bool SafeStrCmpWithWildcard(const wchar_t* pszDest, size_t tDestCch, const wchar_t* pszPattern);
 }
