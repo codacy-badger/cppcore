@@ -3,6 +3,9 @@ function(load_gtest)
 	configure_file(${PROJECT_SOURCE_DIR}/Lib/CMake/CMakeLists.txt.in
 				   ${PROJECT_SOURCE_DIR}/Lib/googletest-build/CMakeLists.txt)
 	
+	if (EXISTS ${PROJECT_SOURCE_DIR}/Lib/googletest-build/CMakeCache.txt)
+		file(REMOVE ${PROJECT_SOURCE_DIR}/Lib/googletest-build/CMakeCache.txt)
+	endif()
 	execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
 					RESULT_VARIABLE   ERROR
 					WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/Lib/googletest-build)

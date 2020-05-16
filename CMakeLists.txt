@@ -12,6 +12,7 @@ include(Lib/CMake/CompileOptions.cmake)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
+    message(STATUS "CMAKE_BUILD_TYPE : ${CMAKE_BUILD_TYPE}")
 endif()
 
 load_gtest()

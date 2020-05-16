@@ -18,9 +18,13 @@ Lib/googletest-build/*
 
 # ignore build
 cmake-build
+Build/Test
+Build/x64Release
+Build/x64MacOSRelease
+Build/x64LinuxDebug
+Build/x64LinuxRelease
+
 !Build/travis_build_codecov.sh
-Output
-out
 
 # ignore coverage
 coverage
@@ -28,6 +32,7 @@ coverage
 # ignore ide
 .vs
 .vscode
+.idea
 coverage.info
 
 # ignore visual studio 
