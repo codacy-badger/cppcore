@@ -27,7 +27,7 @@ namespace core
 		size_t i = 0;
 		for (i = 0; i < tMaxCch; i++)
 		{
-			if (tcsContext[i] == NULL)
+			if (tcsContext[i] == 0)
 				break;
 		}
 		return static_cast<int>(i);
@@ -44,7 +44,7 @@ namespace core
 		memcpy(tcsDest, tcsSrc, tCopyLen * sizeof(TCHAR));
 
 		const size_t tNullIndex = std::min(tDestCch - 1, tCopyLen);
-		tcsDest[tNullIndex] = NULL;
+		tcsDest[tNullIndex] = 0;
 		return tcsDest;
 	}
 
@@ -125,7 +125,7 @@ namespace core
 	#endif
 		if (nRet < 0)	     // Windows returns -1 when buffer is not sufficent
 			return nRet;
-		if (nRet > tDestCch) // Linux returns size of buffer needed when buffer is not sufficent
+		if ((size_t)nRet > tDestCch) // Linux returns size of buffer needed when buffer is not sufficent
 			return -1;
 		return nRet;
 	}
