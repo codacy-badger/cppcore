@@ -154,9 +154,7 @@ TEST(STLStringTest, RightTest)
 
 TEST(STLStringTest, StrCmpWithWildcardTest)
 {
-	const std::tstring strContext = TEXT("/abc");
+	const std::tstring strContext = TEXT("/a/b/c/def");
 	
-	EXPECT_TRUE(StrCmpWithWildcard(strContext, TEXT("????")));
-	EXPECT_TRUE(StrCmpWithWildcard(strContext, TEXT("*")));
-	EXPECT_FALSE(StrCmpWithWildcard(strContext, TEXT("/??*??")));
+	EXPECT_TRUE(StrCmpWithWildcard(strContext, TEXT("*/?ef")));
 }

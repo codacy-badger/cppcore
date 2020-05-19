@@ -105,7 +105,7 @@ namespace core
 	int SafeSVPrintf(LPTSTR tcsDest, size_t tDestCch, LPCTSTR tcsFormat, va_list vaList)
 	{
 	#if defined (_MSC_VER) & defined(UNICODE)
-		std::tstring strFormat(pszFormat);
+		std::tstring strFormat(tcsFormat);
 		size_t tLength = strFormat.length();
 
 		for (size_t i = 0; (i + 1) < tLength; i++)
@@ -179,7 +179,7 @@ namespace core
 		for (i = 0; i < strWildCard.size(); i++)
 		{
 			const TCHAR cCurChar = strWildCard.at(i);
-			if (std::tstring::npos == s_WildCards.find(cCurChar))
+			if (s_WildCards.find(cCurChar) == std::tstring::npos)
 				continue;
 
 			if (tBeginIndex != i)
