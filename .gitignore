@@ -19,7 +19,9 @@ Lib/googletest-build/*
 # ignore build
 cmake-build
 Build/Test
+Build/x64Debug
 Build/x64Release
+Build/x64MacOSDebug
 Build/x64MacOSRelease
 Build/x64LinuxDebug
 Build/x64LinuxRelease
