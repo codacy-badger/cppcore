@@ -2,7 +2,7 @@
 
 #include "../../Src/_Common/Type.h"
 #include "../../Src/_Common/Define.h"
-#include "../../Src/_Common/Errorcode.h"
+#include "../../Src/_Common/ErrorCode.h"
 #include "../../Src/000_String/000_String.h"
 
 using namespace core;

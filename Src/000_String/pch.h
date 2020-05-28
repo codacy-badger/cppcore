@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <vector>
 #include <algorithm>
+#include <stdexcept>
 
 #include "../_Common/Type.h"
 #include "../_Common/Define.h"
-#include "../_Common/Errorcode.h"
+#include "../_Common/ErrorCode.h"

@@ -1,6 +1,18 @@
 set(TARGET_NAME 000_String)
 
 file(GLOB_RECURSE SOURCES *.cpp)
+if(MSVC)
+	exclude_from_list(SOURCES *_Mac.cpp)
+	exclude_from_list(SOURCES *_Linux.cpp)
+elseif(APPLE)
+	exclude_from_list(SOURCES *_Win.cpp)
+	exclude_from_list(SOURCES *_Linux.cpp)
+	include_to_list(SOURCES *_Mac_Linux.cpp)
+else()
+	exclude_from_list(SOURCES *_Win.cpp)
+	exclude_from_list(SOURCES *_Mac.cpp)
+	include_to_list(SOURCES *_Linux_Mac.cpp)
+endif()
 
 message(STATUS "TARGET- " ${TARGET_NAME})
 foreach(SOURCE IN LISTS SOURCES)
