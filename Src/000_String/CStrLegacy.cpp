@@ -135,15 +135,15 @@ namespace core
 	{
 		const size_t tCchKey = SafeStrLen(tcsKey, tCchDest);
 		if (tCchKey > tCchDest)
-			return -1;
+			return std::numeric_limits<size_t>::max();
 		
-		const int nMaxDestSearchLen = static_cast<int>(tCchDest) - static_cast<int>(tCchKey) + 1;
-		for (int i = 0; i < nMaxDestSearchLen; i++)
+		const size_t nMaxDestSearchLen = tCchDest - tCchKey + 1;
+		for (size_t i = 0; i < nMaxDestSearchLen; i++)
 		{
 			if (StrExactMatchWorker(tcsDest + i, tcsKey, tCchKey))
 				return i;
 		}
-		return -1;
+		return std::numeric_limits<size_t>::max();
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
@@ -256,11 +256,11 @@ namespace core
 
 					do
 					{
-						int nIndex = SafeFindStr(pszDest + stCur.tContextPos, tDestCch - stCur.tContextPos, strPatternToken.c_str());
-						if (nIndex < 0)
+						const size_t tIndex = SafeFindStr(pszDest + stCur.tContextPos, tDestCch - stCur.tContextPos, strPatternToken.c_str());
+						if ( tIndex == std::numeric_limits<size_t>::max() )
 							break;
 
-						stCur.tContextPos += nIndex;
+						stCur.tContextPos += tIndex;
 						stackSearchingScenario.push(stCur);
 						stCur.tContextPos += strPatternToken.length();
 					} while (stCur.tContextPos < tDestCch);

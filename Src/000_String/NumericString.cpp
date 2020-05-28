@@ -56,9 +56,6 @@ namespace core
 	{	return TCSFromNTCS(strValue);	}
     */
 
-
-
-
 	std::tstring HexFrom(char nValue)
 	{
 		return Format(TEXT("0x%08X"), (unsigned char)nValue);
@@ -172,8 +169,8 @@ namespace core
 			if( (nValue < 0) || (nValue >= nBase) )
 				return uRet;
 
-			uRet *= nBase;
-			uRet += (T)nValue;
+			uRet *= static_cast<T>(nBase);
+			uRet += static_cast<T>(nValue);
 		}
 
 		return uRet;
