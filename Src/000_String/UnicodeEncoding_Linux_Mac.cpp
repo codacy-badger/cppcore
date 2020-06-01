@@ -5,6 +5,7 @@
 #include <iconv.h>
 #include <errno.h>
 #include <stdexcept>
+#include <string.h>
 
 namespace core
 {

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "BOM.h"
+#include <string.h>
 
 namespace core
 {
@@ -34,7 +35,7 @@ namespace core
 			return BOM_UNDEFINED;
 		}
 
-		fseek(pFile, stBOM.tSize, SEEK_SET);
+		fseek(pFile, static_cast<long>(stBOM.tSize), SEEK_SET);
 		return nType;
 	}
 

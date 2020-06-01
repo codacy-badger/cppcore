@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "UnicodeEncoding.h"
+#include <string.h>
 
 namespace core
 {

@@ -1,5 +1,7 @@
 #pragma once 
 
-#include "pch.h"
 #include "CStrLegacy.h"
 #include "STLString.h"
+#include "BOM.h"
+#include "Unicode.h"
+#include "UnicodeEncoding.h"
