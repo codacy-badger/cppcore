@@ -1,0 +1,33 @@
+name: MacOSBuild
+on: [push]
+
+jobs:
+    install_cmake:
+        name: install cmake
+        runs-on: macos-latest
+        steps:
+            - name: install latest cmake
+              uses: lukka/get-cmake@latest
+        
+    release_build:
+        name: release build
+        runs-on: macos-latest
+        needs: [install_cmake]
+        steps:
+            - name: checkout
+              uses: actions/checkout@v2
+            - name: make cmake-build directory
+              run: mkdir cmake-build
+              shell: bash
+            - name: release configure
+              run: cmake .. -DCMAKE_BUILD_TYPE=Release
+              shell: bash
+              working-directory: ./cmake-build
+            - name: release build
+              run: cmake --build . --config Release
+              shell: bash
+              working-directory: ./cmake-build
+            - name: run test -C Release
+              run: ctest -C Release
+              shell: bash
+              working-directory: ./cmake-build
