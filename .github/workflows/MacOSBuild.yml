@@ -8,7 +8,9 @@ jobs:
         steps:
             - name: install latest cmake
               uses: lukka/get-cmake@latest
-        
+            - name: install iconv
+              run: brew install libiconv
+              
     release_build:
         name: release build
         runs-on: macos-latest
