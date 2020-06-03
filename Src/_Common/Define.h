@@ -16,6 +16,12 @@
 #endif
 #endif
 
+#ifdef UNICODE 
+#define vsntprintf vswprintf
+#else
+#define vsntprintf vsnprintf
+#endif 
+
 #ifndef CASE_TO_STR
 #define CASE_TO_STR(x)		case x:	return TEXT(#x);
 #endif
