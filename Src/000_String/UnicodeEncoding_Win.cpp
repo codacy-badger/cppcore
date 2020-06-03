@@ -18,13 +18,13 @@ namespace core
 
 			if( NULL == pDest )
 			{
-				size_t tDstLen = ::MultiByteToWideChar(CP_ACP, 0, pSrc, (int)tSrcReadCch, NULL, 0);
+				size_t tDstLen = ::MultiByteToWideChar(949, 0, pSrc, (int)tSrcReadCch, NULL, 0);
 				if( 0 == tDstLen )
 					throw std::runtime_error("MultiByteToWideChar failure, calc requiredSize");
 			}
 			else
 			{
-				size_t tDstLen = ::MultiByteToWideChar(CP_ACP, 0, pSrc, (int)tSrcReadCch, (LPWSTR)pDest, (int)tDestCch);
+				size_t tDstLen = ::MultiByteToWideChar(949, 0, pSrc, (int)tSrcReadCch, (LPWSTR)pDest, (int)tDestCch);
 				if( 0 == tDstLen )
 					throw std::runtime_error("MultiByteToWideChar failure, memory copy");
 			}
@@ -54,13 +54,13 @@ namespace core
 
 			if( NULL == pDest )
 			{
-				tDstLen = ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)pSrc, (int)tSrcCch, NULL, 0, NULL, NULL);
+				tDstLen = ::WideCharToMultiByte(949, 0, (LPCWSTR)pSrc, (int)tSrcCch, NULL, 0, NULL, NULL);
 				if( 0 == tDstLen )
 					throw std::runtime_error("MultiByteToWideChar failure, calc requiredSize");
 			}
 			else
 			{
-				tDstLen = ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)pSrc, (int)tSrcCch, (LPSTR)pDest, (int)tDestCch, NULL, NULL);
+				tDstLen = ::WideCharToMultiByte(949, 0, (LPCWSTR)pSrc, (int)tSrcCch, (LPSTR)pDest, (int)tDestCch, NULL, NULL);
 				if( 0 == tDstLen )
 					throw std::runtime_error("MultiByteToWideChar failure, memory copy");
 			}
