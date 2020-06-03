@@ -23,8 +23,8 @@ namespace core
 	E_BOM_TYPE ReadBOM(FILE* pFile)
 	{
 		BYTE btBOM[5] = { 0, };
-		size_t tReadSize = fread(btBOM, 1, 5, pFile);
-		if( (0 == tReadSize) || (tReadSize == -1) )
+		const size_t tReadSize = fread(btBOM, 1, 5, pFile);
+		if( (0 == tReadSize) || (tReadSize == std::numeric_limits<size_t>::max()) )
 			return BOM_UNDEFINED;
 
 		ST_BOM_INFO stBOM = { 0, };

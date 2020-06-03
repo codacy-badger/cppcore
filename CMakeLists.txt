@@ -4,6 +4,7 @@ project(cppcore)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Lib/CMake")
 
 set(CMAKE_CXX_STANDARD 11)
+add_definitions(-DCMAKE_EXPORT_COMPILE_COMMANDS=ON)
 
 include(CTest)
 include(Lib/CMake/GoogleTest.cmake)

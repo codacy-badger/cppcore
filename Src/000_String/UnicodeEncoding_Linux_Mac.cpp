@@ -19,7 +19,7 @@ namespace core
 		size_t tTempSrcLeft = *ptSrcLeft;
 		char* pszTempDestPos = szBOMBuff;
 		size_t tTempDestLeft = tTempBOMSize;
-		int nRet = (int)iconv(hICONV, &pTempSrcPos, &tTempSrcLeft, &pszTempDestPos, &tTempDestLeft);
+		::iconv(hICONV, &pTempSrcPos, &tTempSrcLeft, &pszTempDestPos, &tTempDestLeft);
 		if( tTempBOMSize == tTempDestLeft )
 			return BOM_UNDEFINED;
 
@@ -59,7 +59,7 @@ namespace core
 			size_t tDestLeft = tDestSize;
 			nRetType = ReadAndStripBOM(hICONV, &pSrcPos, &tSrcLeft, &pDestPos, &tDestLeft);
 
-			int nRet = (int)::iconv(hICONV, &pSrcPos, &tSrcLeft, &pDestPos, &tDestLeft);
+			::iconv(hICONV, &pSrcPos, &tSrcLeft, &pDestPos, &tDestLeft);
 			if( tSrcLeft == tSrcSize )
 				throw std::runtime_error("iconv operation failure");
 

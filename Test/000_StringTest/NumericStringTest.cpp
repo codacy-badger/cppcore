@@ -1,102 +1,171 @@
 #include "pch.h"
-#include <limits>
 #include "../../Src/000_String/NumericString.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////
-template <typename T>
-class _NumericStringTest : public ::testing::Test
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, ValueFrom_UndefindedTest)
 {
-protected:
-    T value;
-};
+	{
+		unsigned int tValue = 1;
+		EXPECT_EQ(tValue, ValueFrom<unsigned int>(TEXT("1")));
+	}
+	
+	{
+		uint32_t tValue = 1;
+		EXPECT_EQ(TEXT("1"), StringFrom(tValue));
+	}
 
-using StringSupportTypes = ::testing::Types<BYTE, WORD, DWORD, QWORD, uint32_t,
-                                            char, short, int32_t, int64_t>;
-
-TYPED_TEST_SUITE(_NumericStringTest, StringSupportTypes);
-
-TYPED_TEST(_NumericStringTest, StringSupportTypesTest)
-{
-    EXPECT_EQ(TEXT("0"), StringFrom(0));
-    EXPECT_EQ(TEXT("1"), StringFrom(1));
-    EXPECT_EQ(TEXT("12"), StringFrom(12));
-    EXPECT_EQ(TEXT("123"), StringFrom(123));
-
-    if ( std::numeric_limits<decltype(this->value)>::is_signed )
-    {
-        EXPECT_EQ(TEXT("-1"), StringFrom(-1));
-        EXPECT_EQ(TEXT("-12"), StringFrom(-12));
-        EXPECT_EQ(TEXT("-123"), StringFrom(-123));
-    }
+	{
+		std::tstring strValue = TEXT("-1");
+		EXPECT_EQ(TEXT("-1"), StringFrom(strValue));
+	}
 }
 
-TEST(NumericStringTest, StringFromBoolTest)
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, ValueFrom_LongLongTest)
 {
-    EXPECT_EQ(TEXT("true"), StringFrom(true));
-    EXPECT_EQ(TEXT("false"), StringFrom(false));
+	EXPECT_EQ(-1, ValueFrom<int64_t>(TEXT("0xFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ(-1, ValueFrom<QWORD>(TEXT("0xFFFFFFFFFFFFFFFF")));
+
+	EXPECT_EQ(0xFFFFFFFFFFFFFFFF, ValueFrom<int64_t>(TEXT("-1")));
+	EXPECT_EQ(0xFFFFFFFFFFFFFFFF, ValueFrom<QWORD>(TEXT("-1")));
 }
 
-TEST(NumericStringTest, StringFromFloatNumberTest)
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, CharFromTest)
 {
-    EXPECT_EQ(TEXT("0.000000"), StringFrom(0.0f));
-    EXPECT_EQ(TEXT("1.010000"), StringFrom(1.01f));
-    EXPECT_EQ(TEXT("-1.010000"), StringFrom(-1.01f));
+	EXPECT_EQ('\n', CharFrom(TEXT("0x0A")));
+	EXPECT_EQ('\n', CharFrom(TEXT("0xFF0A")));
 }
 
-TEST(NumericStringTest, StringFromDoubleNumberTest)
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, ShortFromTest)
 {
-    EXPECT_EQ(TEXT("0.000000"), StringFrom(0.0));
-    EXPECT_EQ(TEXT("1.010000"), StringFrom(1.01));
-    EXPECT_EQ(TEXT("-1.010000"), StringFrom(-1.01));
+	EXPECT_EQ(-240, ShortFrom(TEXT("0xFF10")));
+	EXPECT_EQ(-240, ShortFrom(TEXT("0x10FFFF10")));
 }
 
-TEST(NumericStringTest, StringFromExponentialExpressionTest)
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, UINTFromTest)
 {
-    EXPECT_EQ(TEXT("1.000000"), StringFrom(0.1e+1));
-    EXPECT_EQ(TEXT("0.000010"), StringFrom(10E-006));
-    EXPECT_EQ(TEXT("-1.234000"), StringFrom(-1234E-003));
-    EXPECT_EQ(TEXT("0.000000"), StringFrom(1e-10));
-    EXPECT_EQ(TEXT("1234.000000"), StringFrom(1.234e3));
+	EXPECT_EQ((BYTE)-1, BYTEFrom(TEXT("0xFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ((WORD)-1, WORDFrom(TEXT("0xFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ((DWORD)-1, DWORDFrom(TEXT("0xFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ((QWORD)-1, QWORDFrom(TEXT("0xFFFFFFFFFFFFFFFF")));
 }
 
-TEST(NumericStringTest, StringFromStringTest)
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, MalformValueStringTest2)
 {
-    std::tstring strValue = TEXT("value");
-    EXPECT_EQ(TEXT("value"), StringFrom(strValue));
+	DoubleFrom(TEXT("-"));
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-using HexFromSupportType = ::testing::Types<BYTE, WORD, DWORD, QWORD, uint32_t,
-                                            char, short, int32_t, int64_t>;
-
-TEST(_NumericStringTest, HexFromSupportTypeTest)
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, IntBase16ValueTest)
 {
-    EXPECT_EQ(TEXT("0x00000000"), HexFrom(0));
-    EXPECT_EQ(TEXT("0xAAAAAAAA"), HexFrom(0xAAAAAAAA));
+	int nValue = -1;
+	EXPECT_EQ(TEXT("-1"), StringFrom(nValue));
+	EXPECT_EQ(nValue, IntFrom(TEXT("0xFFFFFFFF")));
 }
 
-TEST(NumericStringTest, HexFromBoolTest)
+// Disable for MAC -> ambiguous(int and long is same) compile error
+////////////////////////////////////////////////////////////////////////////
+//TEST(NumericString, LongValueTest)
+//{
+//    long nValue = 123;
+//    EXPECT_EQ(TEXT("123"), StringFrom(nValue));
+//    EXPECT_EQ(nValue, IntFrom(TEXT("123")));
+//}
+
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, DoubleValueTest_NoDot_Positive)
 {
-    EXPECT_EQ(TEXT("true"), HexFrom(true));
-    EXPECT_EQ(TEXT("false"), HexFrom(false));
+	EXPECT_TRUE(DIFF(1234, DoubleFrom(TEXT("1234"))) < 0.00001);
 }
 
-TEST(NumericStringTest, HexFromFloatNumberTest)
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, DoubleValueTest_NoDot_Negative)
 {
-    EXPECT_EQ(TEXT("0.000000"), HexFrom(0.0f));
-    EXPECT_EQ(TEXT("1.010000"), HexFrom(1.01f));
-    EXPECT_EQ(TEXT("-1.010000"), HexFrom(-1.01f));
+	EXPECT_TRUE(DIFF(-1234.0, DoubleFrom(TEXT("-1234"))) < 0.00001);
 }
 
-TEST(NumericStringTest, HexFromDoubleNumberTest)
+
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, DoubleValueTest)
 {
-    EXPECT_EQ(TEXT("0.000000"), HexFrom(0.0));
-    EXPECT_EQ(TEXT("1.010000"), HexFrom(1.01));
-    EXPECT_EQ(TEXT("-1.010000"), HexFrom(-1.01));
+	EXPECT_TRUE(DIFF(1.234, DoubleFrom(TEXT("1.234"))) < 0.00001);
 }
 
-TEST(NumericStringTest, HexFromStringTest)
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, DoubleValueTest_DoubleDot)
 {
-    std::tstring strValue = TEXT("value");
-    EXPECT_EQ(TEXT("value"), HexFrom(strValue));
+	EXPECT_TRUE(DIFF(1.23, DoubleFrom(TEXT("1.23.4"))) < 0.00001);
 }
+
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, DoubleValueTest_PositiveExponential)
+{
+	EXPECT_TRUE(DIFF(90.0, DoubleFrom(TEXT("9.000000e+01"))) < 0.00001);
+}
+
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, DoubleValueTest_NegativeExponential)
+{
+	EXPECT_TRUE(DIFF(0.9, DoubleFrom(TEXT("9.000000e-01"))) < 0.00001);
+}
+
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, DoubleStringTest)
+{
+	EXPECT_EQ(TEXT("1.234000"), StringFrom(1.234));
+}
+
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, IntTest)
+{
+	EXPECT_EQ(1234,			IntFrom(TEXT("1234")));
+	EXPECT_EQ(-1234,		IntFrom(TEXT("-1234")));
+	EXPECT_EQ((int)1234123412341234,	IntFrom(TEXT("1234123412341234")));
+	EXPECT_EQ((int)-1234123412341234,	IntFrom(TEXT("-1234123412341234")));
+	EXPECT_EQ(0,			IntFrom(TEXT("0")));
+	EXPECT_EQ(0xFFFFFFFF,	IntFrom(TEXT("0xFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFF,	IntFrom(TEXT("0xFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFE,	IntFrom(TEXT("0xFFFFFFFFFFFFFFFE")));
+}
+
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, Int64Test)
+{
+	EXPECT_EQ(1234,			Int64From(TEXT("1234")));
+	EXPECT_EQ(-1234,		Int64From(TEXT("-1234")));
+	EXPECT_EQ(1234123412341234,		Int64From(TEXT("1234123412341234")));
+	EXPECT_EQ(-1234123412341234,	Int64From(TEXT("-1234123412341234")));
+	EXPECT_EQ(0,			Int64From(TEXT("0")));
+	EXPECT_EQ(0xFFFFFFFF,	Int64From(TEXT("0xFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFFFFFFFFFF,	Int64From(TEXT("0xFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFFFFFFFFFF,	Int64From(TEXT("0xFFFFFFFFFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFFFFFFFFFE,	Int64From(TEXT("0xFFFFFFFFFFFFFFFFFFFFFFFE")));
+}
+
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, UIntTest)
+{
+	EXPECT_EQ(1234,			DWORDFrom(TEXT("1234")));
+	EXPECT_EQ(0xfffffb2e,	DWORDFrom(TEXT("-1234")));
+	EXPECT_EQ(0,			DWORDFrom(TEXT("0")));
+	EXPECT_EQ(0xFFFFFFFF,	DWORDFrom(TEXT("0xFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFF,	DWORDFrom(TEXT("0xFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFE,	DWORDFrom(TEXT("0xFFFFFFFFFFFFFFFE")));
+}
+
+//////////////////////////////////////////////////////////////////////////
+TEST(NumericString, UInt64Test)
+{
+	EXPECT_EQ(1234,			QWORDFrom(TEXT("1234")));
+	EXPECT_EQ(0xfffffffffffffb2e,	QWORDFrom(TEXT("-1234")));
+	EXPECT_EQ(0,			QWORDFrom(TEXT("0")));
+	EXPECT_EQ(0xFFFFFFFF,	QWORDFrom(TEXT("0xFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFFFFFFFFFF,	QWORDFrom(TEXT("0xFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFFFFFFFFFF,	QWORDFrom(TEXT("0xFFFFFFFFFFFFFFFFFFFFFFFF")));
+	EXPECT_EQ(0xFFFFFFFFFFFFFFFE,	QWORDFrom(TEXT("0xFFFFFFFFFFFFFFFFFFFFFFFE")));
+}
+
