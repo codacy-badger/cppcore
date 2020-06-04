@@ -25,3 +25,7 @@ target_compile_definitions(${TARGET_NAME}
 target_link_libraries(${TARGET_NAME} 
     ${DEFAULT_LINKER_OPTIONS} gtest_main gtest 000_String
 )
+
+if(APPLE)
+    target_link_libraries(${TARGET_NAME} iconv)
+endif()
